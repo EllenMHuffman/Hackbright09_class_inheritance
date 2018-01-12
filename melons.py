@@ -16,7 +16,7 @@ class AbstractMelonOrder(object):
 
         base_price = 5
 
-        if self.species.lower() == 'christmas':
+        if self.species.lower() == "christmas":
             base_price *= 1.5
 
         total = (1 + self.tax) * self.qty * base_price
@@ -61,3 +61,15 @@ class InternationalMelonOrder(AbstractMelonOrder):
             return super(InternationalMelonOrder, self).get_total() + flat_fee
 
         return super(InternationalMelonOrder, self).get_total()
+
+
+class GovernmentMelonOrder(AbstractMelonOrder):
+    """A melon order by the US Government."""
+
+    tax = 0
+    passed_inspection = False
+
+    def mark_inspection(self, passed):
+        """Marks melon as True after inspection."""
+
+        self.passed_inspection = passed
