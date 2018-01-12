@@ -1,3 +1,7 @@
+from random import randint
+from datetime import date, datetime
+
+
 """Classes for melon orders."""
 
 
@@ -11,15 +15,29 @@ class AbstractMelonOrder(object):
         self.qty = qty
         self.shipped = False
 
+    def get_base_price(self):
+        """Determine base price using randint, apply surcharge for rush hour"""
+
+        fee = 0
+
+        base_price = randint(5, 9)
+        order_time = datetime.today()
+
+        if (8 <= order_time.hour <= 11 and
+                0 <= order_time.weekday() <= 4):
+            fee = 4
+
+        return base_price, fee
+
     def get_total(self):
         """Calculate price, including tax."""
 
-        base_price = 5
+        base_price, fee = get_base_price()
 
         if self.species.lower() == "christmas":
             base_price *= 1.5
 
-        total = (1 + self.tax) * self.qty * base_price
+        total = (1 + self.tax) * (self.qty * fee) * base_price
 
         return total
 
@@ -70,6 +88,6 @@ class GovernmentMelonOrder(AbstractMelonOrder):
     passed_inspection = False
 
     def mark_inspection(self, passed):
-        """Marks melon as True after inspection."""
+        """Marks melon as True or False after inspection."""
 
         self.passed_inspection = passed
