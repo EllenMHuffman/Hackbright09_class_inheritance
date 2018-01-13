@@ -15,6 +15,9 @@ class AbstractMelonOrder(object):
         self.qty = qty
         self.shipped = False
 
+        if self.qty > 100:
+            raise TooManyMelonsError
+
     def get_base_price(self):
         """Determine base price using randint, apply surcharge for rush hour"""
 
@@ -91,3 +94,13 @@ class GovernmentMelonOrder(AbstractMelonOrder):
         """Marks melon as True or False after inspection."""
 
         self.passed_inspection = passed
+
+
+class TooManyMelonsError(ValueError):
+    """Raises exception for wholesale order quantities"""
+
+    def __str__(self):
+        """Returns print statement for error"""
+
+        self.value = "No orders over 100 melons!"
+        return repr(self.value)
